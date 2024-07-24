@@ -24,7 +24,8 @@ To include the `ZenoPay` package in your project using Composer, add it to your 
 Then run:
 
 ```sh
-composer install
+composer require zenopay/zenopay-php
+
 ```
 
 ### Manual Installation
