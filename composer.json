@@ -3,12 +3,13 @@
     "description": "A PHP package for ZenoPay payment processing.",
     "type": "library",
     "license": "MIT",
+    
     "autoload": {
         "psr-4": {
             "ZenoPay\\": "src/"
         }
     },
-    "require": {
-        "php": ">=7.2"
-    }
+    "require": {},
+    "minimum-stability": "stable",
+    "prefer-stable": true
 }
