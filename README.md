@@ -9,8 +9,9 @@ The `ZenoPay` PHP package allows you to integrate ZenoPay payment processing int
 
 ## Installation
 
-
+```php
 composer require zenopay/zenopay-php
+```
 
 ```
 
