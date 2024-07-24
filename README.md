@@ -78,7 +78,7 @@ public function processPayment($buyer_email, $buyer_name, $buyer_phone, $amount)
 
 ```php
 // Initialize the ZenoPay instance
-$zenopay = new ZenoPay('your_account_id', 'your_api_key', 'your_secret_key', 'https://api.zenopay.com/process');
+$zenopay = new ZenoPay('your_account_id', 'your_api_key', 'your_secret_key', 'https://api.zenopay.com');
 
 // Process a payment
 $response = $zenopay->processPayment('buyer@example.com', 'John Doe', '1234567890', 100.00);
