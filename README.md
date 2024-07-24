@@ -9,21 +9,7 @@ The `ZenoPay` PHP package allows you to integrate ZenoPay payment processing int
 
 ## Installation
 
-### Composer
 
-To include the `ZenoPay` package in your project using Composer, add it to your `composer.json`:
-
-```json
-{
-  "require": {
-    "your-vendor/zenopay": "^1.0"
-  }
-}
-```
-
-Then run:
-
-```sh
 composer require zenopay/zenopay-php
 
 ```
