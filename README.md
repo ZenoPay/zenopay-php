@@ -23,6 +23,17 @@ If you are not using Composer, include the `ZenoPay` class in your project:
 require_once 'path/to/ZenoPay.php';
 ```
 
+## Installation
+
+You need to initialize the `ZenoPay` class with your ZenoPay account details.
+
+### Constructor
+
+```php
+public function __construct($account_id, $api_key, $secret_key, $api_endpoint);
+```
+
+
 ## Configuration
 
 You need to initialize the `ZenoPay` class with your ZenoPay account details.

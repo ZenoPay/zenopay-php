@@ -6,7 +6,7 @@ class ZenoPay {
     private $account_id;
     private $api_key;
     private $secret_key;
-    private $api_endpoint;
+    private $api_endpoint; 
 
     public function __construct($account_id, $api_key, $secret_key, $api_endpoint) {
         $this->account_id = $account_id;
