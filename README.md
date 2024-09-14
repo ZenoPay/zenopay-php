@@ -1,111 +1,252 @@
-Certainly! Here's a README.md format for your ZenoPay PHP package documentation:
+# ZenoPay Order Creation and Status Check Scripts
 
-```markdown
-# ZenoPay PHP Package
+This repository contains PHP scripts for interacting with the ZenoPay API. The scripts demonstrate how to create an order and check the status of an order.
 
-## Overview
+## Table of Contents
 
-The `ZenoPay` PHP package allows you to integrate ZenoPay payment processing into your PHP applications. This package provides an easy-to-use interface for creating and managing payment transactions securely through the ZenoPay API.
+- [Order Creation Script](#order-creation-script)
+  - [Overview](#overview)
+  - [Script Components](#script-components)
+    - [API Endpoint](#api-endpoint)
+    - [Order Data](#order-data)
+    - [cURL Configuration](#curl-configuration)
+    - [Error Logging Function](#error-logging-function)
+  - [Error Handling](#error-handling)
+  - [Example Usage](#example-usage)
+  - [Notes](#notes)
+- [Order Status Check Script](#order-status-check-script)
+  - [Overview](#overview-1)
+  - [Script Components](#script-components-1)
+    - [API Endpoint](#api-endpoint-1)
+    - [Post Data](#post-data)
+    - [cURL Configuration](#curl-configuration-1)
+  - [Error Handling](#error-handling-1)
+  - [Example Usage](#example-usage-1)
+  - [Notes](#notes-1)
 
-## Installation
+## Order Creation Script
 
-```php
-composer require zenopay/zenopay-php
-```
+### Overview
 
-```
+This script sends a POST request to the ZenoPay API to create an order. It includes a basic error logging function to capture any issues during the request.
 
-### Manual Installation
+### Script Components
 
-If you are not using Composer, include the `ZenoPay` class in your project:
+#### API Endpoint
 
-```php
-require_once 'path/to/ZenoPay.php';
-```
+- **URL**: `https://api.zeno.africa`
 
-## Installation
+  This is the endpoint for creating an order.
 
-You need to initialize the `ZenoPay` class with your ZenoPay account details.
+#### Order Data
 
-### Constructor
-
-```php
-public function __construct($account_id, $api_key, $secret_key, $api_endpoint);
-```
-
-
-## Configuration
-
-You need to initialize the `ZenoPay` class with your ZenoPay account details.
-
-### Constructor
-
-```php
-public function __construct($account_id, $api_key, $secret_key, $api_endpoint);
-```
-
-**Parameters:**
-
-- **$account_id**: Your ZenoPay account ID.
-- **$api_key**: Your ZenoPay API key.
-- **$secret_key**: Your ZenoPay secret key.
-- **$api_endpoint**: The API endpoint URL for processing payments.
-
-## Methods
-
-### `processPayment`
+The following data is sent in the POST request:
 
 ```php
-public function processPayment($buyer_email, $buyer_name, $buyer_phone, $amount);
+$url = "https://api.zeno.africa";
+
+// Data to send for creating the order 
+$orderData = [
+    'create_order' => 1,
+    'buyer_email' => 'CUSTOMER_EMAIL',
+    'buyer_name' => 'CUSTOMER_NAME',
+    'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
+    'amount' => 10000, // AMOUNT_TO_BE_PAID
+    'account_id' => 'YOUR_ACCOUNT_ID', 
+    'api_key' => 'YOUR_API_KEY', 
+    'secret_key' => 'YOUR_SECRET_KEY'
+];
 ```
 
-**Parameters:**
+- **`create_order`** (integer): Set to `1` to initiate order creation.
+- **`buyer_email`** (string): Customer's email address.
+- **`buyer_name`** (string): Customer's full name.
+- **`buyer_phone`** (string): Customer's phone number.
+- **`amount`** (integer): The amount to be paid (in smallest currency unit, e.g., cents).
+- **`account_id`** (string): Your unique account ID for authentication.
+- **`api_key`** (string): Your API key for authentication.
+- **`secret_key`** (string): Your secret key for authentication.
 
-- **$buyer_email**: The email address of the buyer.
-- **$buyer_name**: The name of the buyer.
-- **$buyer_phone**: The phone number of the buyer.
-- **$amount**: The amount to be charged.
+#### cURL Configuration
 
-**Returns:**
-
-- **Array**: The method returns an associative array with the following keys:
-  - **result**: A string indicating the result of the request. Possible values are `'success'` or `'failure'`.
-  - **error**: A string containing the error message if the request fails. Only present if `result` is `'failure'`.
-  - **redirect**: A URL to which the user should be redirected to complete the payment. Only present if `result` is `'success'`.
-
-**Example:**
+The script uses cURL to make the POST request:
 
 ```php
-// Initialize the ZenoPay instance
-$zenopay = new ZenoPay('your_account_id', 'your_api_key', 'your_secret_key', 'https://api.zeno.africa');
+$ch = curl_init();
+curl_setopt($ch, CURLOPT_URL, $url);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($orderData));
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$response = curl_exec($ch);
+curl_close($ch);
+```
 
-// Process a payment
-$response = $zenopay->processPayment('buyer@example.com', 'John Doe', '1234567890', 100.00);
+- **`curl_init()`**: Initializes a new cURL session.
+- **`curl_setopt()`**: Configures options for the cURL session.
+- **`curl_exec()`**: Executes the request and retrieves the response.
+- **`curl_close()`**: Closes the cURL session.
 
-if ($response['result'] == 'success') {
-    // Redirect the user to the payment page
-    header('Location: ' . $response['redirect']);
-    exit();
-} else {
-    // Handle the error
-    echo 'Payment failed: ' . $response['error'];
+#### Error Logging Function
+
+Logs errors to a file:
+
+```php
+function logError($message) 
+{
+    file_put_contents('error_log.txt', $message . "\n", FILE_APPEND);
 }
 ```
 
-## Error Handling
+### Error Handling
 
-The `processPayment` method uses cURL for making API requests. If a cURL error occurs, it will be logged, and the method will return an error message. Ensure that your PHP installation has the cURL extension enabled.
+To enhance error handling:
 
-## Logging
+1. **Check cURL Errors**:
+   ```php
+   if ($response === false) {
+       logError('cURL Error: ' . curl_error($ch));
+   }
+   ```
 
-The package logs request and response data for debugging purposes. You can find these logs in your PHP error log file.
+2. **Check HTTP Status Code**:
+   ```php
+   $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+   if ($httpCode != 200) {
+       logError('HTTP Error: ' . $httpCode);
+   }
+   ```
 
-## Security
+### Example Usage
 
-- Ensure that sensitive information such as `api_key` and `secret_key` is stored securely.
-- Use HTTPS to protect data during transmission.
+1. **Update Order Data**: Replace placeholder values with actual information.
+2. **Save the Script**: Save the file as `create_order.php` or another preferred filename.
+3. **Run the Script**: Execute it via command line or web server.
 
-## Troubleshooting
+### Notes
 
-- **cURL Errors**: If you encounter cURL errors, check your network connectivity and ensure that the API endpoint is correct.
-- **Invalid API Responses**: Verify that the API endpoint and credentials are correct.
+- Ensure that `error_log.txt` is writable by the script.
+- Handle sensitive information such as API keys and secret keys securely.
+
+## Order Status Check Script
+
+### Overview
+
+This script checks the status of an order by sending a POST request to the ZenoPay API endpoint for order status.
+
+### Script Components
+
+#### API Endpoint
+
+- **URL**: `https://api.zeno.africa/order-status`
+
+  This is the endpoint for checking the status of an order.
+
+#### Post Data
+
+The following data is sent in the POST request:
+
+```php
+$endpointUrl = "https://api.zeno.africa/order-status";
+
+// Order ID that you want to check the status for
+$order_id = "66d5e374ccaab";
+
+// Data to be sent in the POST request
+$postData = [
+    'check_status' => 1,
+    'order_id' => $order_id,
+    'api_key' => 'YOUR_API_KEY',
+    'secret_key' => 'YOUR_SECRET_KEY'
+];
+```
+
+- **`check_status`** (integer): Set to `1` to request the status.
+- **`order_id`** (string): The ID of the order whose status you want to check.
+- **`api_key`** (string): Your API key for authentication.
+- **`secret_key`** (string): Your secret key for authentication.
+
+#### cURL Configuration
+
+The script uses cURL to perform the POST request:
+
+```php
+$ch = curl_init($endpointUrl);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+curl_setopt($ch, CURLOPT_POST, true);
+curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+$response = curl_exec($ch);
+
+if (curl_errno($ch)) {
+    echo json_encode([
+        "status" => "error",
+        "message" => 'cURL error: ' . curl_error($ch)
+    ]);
+} else {
+    $responseData = json_decode($response, true);
+    if ($responseData['status'] === 'success') {
+        echo json_encode([
+            "status" => "success",
+            "order_id" => $responseData['order_id'],
+            "message" => $responseData['message'],
+            "payment_status" => $responseData['payment_status']
+        ]);
+    } else {
+        echo json_encode([
+            "status" => "error",
+            "message" => $responseData['message']
+        ]);
+    }
+}
+curl_close($ch);
+```
+
+- **`curl_init($endpointUrl)`**: Initializes a cURL session with the endpoint URL.
+- **`curl_setopt()`**: Sets options for the cURL session.
+- **`curl_exec()`**: Executes the request and retrieves the response.
+- **`curl_close()`**: Closes the cURL session.
+
+### Error Handling
+
+1. **Check cURL Errors**:
+   ```php
+   if (curl_errno($ch)) {
+       echo json_encode([
+           "status" => "error",
+           "message" => 'cURL error: ' . curl_error($ch)
+       ]);
+   }
+   ```
+
+2. **Handle Response**:
+   Decode and format the JSON response based on the status:
+
+   ```php
+   if ($responseData['status'] === 'success') {
+       echo json_encode([
+           "status" => "success",
+           "order_id" => $responseData['order_id'],
+           "message" => $responseData['message'],
+           "payment_status" => $responseData['payment_status']
+       ]);
+   } else {
+       echo json_encode([
+           "status" => "error",
+           "message" => $responseData['message']
+       ]);
+   }
+   ```
+
+### Example Usage
+
+1. **Update Post Data**: Replace placeholder values with actual data.
+2. **Save the Script**: Save the file as `check_order_status.php` or another preferred filename.
+3. **Run the Script**: Execute it via command line or web server.
+
+### Notes
+
+- Ensure that `error_log.txt` is writable if you are using error logging.
+- Secure sensitive information such as API keys and secret keys.
+
+---
+
+Feel free to modify or expand this README as needed for your specific requirements.
