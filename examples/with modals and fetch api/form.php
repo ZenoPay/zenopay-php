@@ -189,8 +189,10 @@
                 const modalMessage = document.getElementById('modalMessage');
 
                 if (data.result === 'success') {
-                    modalTitle.textContent = 'Success';
-                    modalMessage.textContent = data.message;
+                    // modalTitle.textContent = 'Success';
+                    // modalMessage.textContent = data.message;
+                    modalTitle.textContent = 'info';
+                    modalMessage.textContent = "you'll receive a push notification";
 
                     // Reset the button back to original state after success
                     paymentSuccessful = true;
@@ -221,7 +223,7 @@
 
             // Redirect to homepage if payment was successful
             if (paymentSuccessful) {
-                window.location.href = '/'; // Redirect to the homepage or any desired page
+                window.location.href = './redirectpage.php'; // Redirect to the homepage or any desired page
                 submitBtn.value = 'Pay Now';
             }
         }
