@@ -15,21 +15,35 @@ $orderData = [
     'secret_key' => 'YOUR SECRET KEY'
 ];
 
-// Initialize cURL session for creating the order
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($orderData));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch); 
+// Build the query string from the data array
+$queryString = http_build_query($orderData);
 
-echo ($response); 
+// Create a context for the HTTP request
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+        'content' => $queryString,
+    ],
+];
+$context = stream_context_create($options);
 
-curl_close($ch); 
+// Perform the POST request
+$response = file_get_contents($url, false, $context);
 
+// Check if the request was successful
+if ($response === FALSE) {
+    logError("Error: Unable to connect to the API endpoint.");
+}
 
-function logError($message) 
+// Output the response
+echo $response;
+
+// Function to log errors
+function logError($message)
 {
     // Function to log errors
     file_put_contents('error_log.txt', $message . "\n", FILE_APPEND);
 }
+
+?>
