@@ -72,19 +72,16 @@ $orderData = [
 The script uses cURL to make the POST request:
 
 ```php
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL, $url);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($orderData));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$response = curl_exec($ch);
-curl_close($ch);
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+        'content' => $queryString,
+    ],
+];
 ```
 
-- **`curl_init()`**: Initializes a new cURL session.
-- **`curl_setopt()`**: Configures options for the cURL session.
-- **`curl_exec()`**: Executes the request and retrieves the response.
-- **`curl_close()`**: Closes the cURL session.
+
 
 #### Error Logging Function
 
@@ -170,11 +167,13 @@ $postData = [
 The script uses cURL to perform the POST request:
 
 ```php
-$ch = curl_init($endpointUrl);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
-$response = curl_exec($ch);
+$options = [
+    'http' => [
+        'method'  => 'POST',
+        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
+        'content' => $queryString,
+    ],
+];
 
 if (curl_errno($ch)) {
     echo json_encode([
@@ -200,10 +199,7 @@ if (curl_errno($ch)) {
 curl_close($ch);
 ```
 
-- **`curl_init($endpointUrl)`**: Initializes a cURL session with the endpoint URL.
-- **`curl_setopt()`**: Sets options for the cURL session.
-- **`curl_exec()`**: Executes the request and retrieves the response.
-- **`curl_close()`**: Closes the cURL session.
+
 
 ### Error Handling
 
