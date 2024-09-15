@@ -54,6 +54,7 @@ class ZenoPay
             return array(
                 'result' => 'success',
                 'message'  => $responseData['message'],
+                'order_id'=> $responseData['order_id']
             );
         }
     }

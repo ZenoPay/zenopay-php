@@ -39,7 +39,7 @@
 <body>
     <div class="container">
         <h1>Thank You!</h1>
-        <p>You are great!</p>
+        <p>you can store your order_id: <span style="color:white; font-size:30px; background-color:gray"><?php echo $_GET['orderId']; ?></span> in your database!</p>
     </div>
 </body>
 </html>

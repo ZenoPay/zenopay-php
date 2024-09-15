@@ -24,9 +24,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Return the response as JSON
     header('Content-Type: application/json');
-
     if ($response['result'] === 'success') {
-        echo json_encode(['result' => 'success', 'message' => $response['message']]);
+        echo json_encode(['result' => 'success', 'message' => $response['message'], 'order_id'=> $response['order_id']]);
+        // echo $response;
     } else {
         echo json_encode(['result' => 'error', 'error' => $response['error']]);
     }

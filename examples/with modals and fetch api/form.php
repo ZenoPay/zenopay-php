@@ -164,6 +164,7 @@
 
     <script>
         let paymentSuccessful = false;
+        let orderId = '';
 
         document.getElementById('paymentForm').addEventListener('submit', function(event) {
             event.preventDefault(); // Prevent the form from submitting
@@ -191,9 +192,10 @@
                 if (data.result === 'success') {
                     // modalTitle.textContent = 'Success';
                     // modalMessage.textContent = data.message;
+                    orderId = data.order_id;
                     modalTitle.textContent = 'info';
-                    modalMessage.textContent = "you'll receive a push notification";
-
+                    modalMessage.textContent = "you'll receive a push notification. your payment id is "+data.order_id;
+                    submitBtn.value = 'Pay Now';
                     // Reset the button back to original state after success
                     paymentSuccessful = true;
                 } else {
@@ -223,7 +225,7 @@
 
             // Redirect to homepage if payment was successful
             if (paymentSuccessful) {
-                window.location.href = './redirectpage.php'; // Redirect to the homepage or any desired page
+                window.location.href = './redirectpage.php?orderId='+orderId; // Redirect to the homepage or any desired page
                 submitBtn.value = 'Pay Now';
             }
         }
