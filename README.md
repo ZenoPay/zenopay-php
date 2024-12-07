@@ -69,6 +69,24 @@ $orderData = [
 
 #### cURL Configuration
 
+
+
+### Request Format
+
+To initiate a payment transaction, send a **POST** request to the API with a JSON payload that includes the following parameters:
+
+| Parameter        | Type    | Description                                        | Example               |
+|------------------|---------|----------------------------------------------------|-----------------------|
+| `buyer_name`     | string  | Full name of the buyer                             | `"John Doe"`          |
+| `buyer_phone`    | string  | Phone number of the buyer                          | `"255712345678"`     |
+| `buyer_email`    | string  | Email address of the buyer                         | `"johndoe@example.com"`|
+| `amount`         | float   | Amount to be paid by the buyer in the transaction  | `1500.00`              |
+| `account_id`     | string  | Unique account identifier for the transaction      | `"acc_12345xyz"`      |
+| `api_key`        | string  | Your API key for authentication.                   | `"api_key"` |
+| `secret_key`     | string  | Your secret key for authentication.                | `"secret_key"`  |
+
+
+
 The script uses cURL to make the POST request:
 
 ```php
