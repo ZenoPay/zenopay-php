@@ -53,7 +53,8 @@ $orderData = [
     'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
     'amount' => 10000, // AMOUNT_TO_BE_PAID
     'account_id' => 'YOUR_ACCOUNT_ID', 
-    'api_key' => 'YOUR_API_KEY', 
+    'api_key' => 'YOUR_API_KEY',
+    'webhook_url' => 'https://example.com/webhook',
     'secret_key' => 'YOUR_SECRET_KEY'
 ];
 ```
@@ -249,6 +250,40 @@ curl_close($ch);
        ]);
    }
    ```
+
+
+   ## Webhook Handling
+
+After a payment is processed, ZenoPay may send a **webhook** to notify you about the status of the transaction. You can use the following PHP code to handle the webhook and log the incoming data for further processing or debugging.
+
+### Webhook PHP Example
+
+```php
+<?php
+
+// Webhook handling
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Get the raw POST data from the incoming webhook
+    $data = file_get_contents('php://input');
+    
+    // Log the raw data with a timestamp
+    file_put_contents('weblogs.txt', "[" . date('Y-m-d H:i:s') . "] WebHook Data: ".$data."\n", FILE_APPEND);
+}
+
+?>
+
+
+
+WebHook Data: {"order_id":"6757c69cddfa6","payment_status":"COMPLETED","reference":"0882061614"}
+```
+
+### How the Webhook Works:
+1. **Receiving Webhook Data**: This script listens for incoming **POST** requests (which ZenoPay sends for webhooks
+
+) and reads the raw data from the request body using `file_get_contents('php://input')`.
+   
+2. **Logging Webhook Data**: The webhook data is logged to a file (`weblogs.txt`) along with a timestamp for reference. This log will help you debug and track transaction statuses or other data sent via the webhook.
+
 
 ### Example Usage
 
