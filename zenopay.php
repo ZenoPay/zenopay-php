@@ -12,7 +12,8 @@ $orderData = [
     'amount' => 10000, #AMOUNT_TO_BE_PAID
     'account_id' => 'YOUR_ACCOUNT_ID', 
     'api_key' => 'YOUR API ', 
-    'secret_key' => 'YOUR SECRET KEY'
+    'secret_key' => 'YOUR SECRET KEY',
+    'webhook_url' => 'https://example.com/webhook'
 ];
 
 // Build the query string from the data array
