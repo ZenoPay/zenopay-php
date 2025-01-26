@@ -56,12 +56,12 @@ $orderData = [
     'api_key' => 'YOUR_API_KEY',
     'webhook_url' => 'https://example.com/webhook',
     'secret_key' => 'YOUR_SECRET_KEY',
-    'metadata' => json_encode(array(
+    'metadata' => json_encode([
         "product_id" => "12345",
         "color" => "blue",
         "size" => "L",
         "custom_notes" => "Please gift-wrap this item."
-    )),
+    ])
 ];
 
 ```
