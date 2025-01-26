@@ -52,11 +52,18 @@ $orderData = [
     'buyer_name' => 'CUSTOMER_NAME',
     'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
     'amount' => 10000, // AMOUNT_TO_BE_PAID
-    'account_id' => 'YOUR_ACCOUNT_ID', 
+    'account_id' => 'YOUR_ACCOUNT_ID',
     'api_key' => 'YOUR_API_KEY',
     'webhook_url' => 'https://example.com/webhook',
-    'secret_key' => 'YOUR_SECRET_KEY'
+    'secret_key' => 'YOUR_SECRET_KEY',
+    'metadata' => json_encode(array(
+        "product_id" => "12345",
+        "color" => "blue",
+        "size" => "L",
+        "custom_notes" => "Please gift-wrap this item."
+    )),
 ];
+
 ```
 
 - **`create_order`** (integer): Set to `1` to initiate order creation.
