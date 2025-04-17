@@ -5,7 +5,6 @@ $url = "https://api.zeno.africa";
 
 // Data to send for creating the order 
 $orderData = [
-    'create_order' => 1,
     'buyer_email' => 'CUSTOMER_EMAIL',
     'buyer_name' => 'CUSTOMER_NAME',
     'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
