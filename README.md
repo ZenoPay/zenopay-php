@@ -51,10 +51,7 @@ $orderData = [
     'buyer_name' => 'CUSTOMER_NAME',
     'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
     'amount' => 10000, // AMOUNT_TO_BE_PAID
-    'account_id' => 'YOUR_ACCOUNT_ID',
-    'api_key' => 'YOUR_API_KEY',
     'webhook_url' => 'https://example.com/webhook',
-    'secret_key' => 'YOUR_SECRET_KEY',
     'metadata' => json_encode([
         "product_id" => "12345",
         "color" => "blue",
@@ -70,9 +67,7 @@ $orderData = [
 - **`buyer_name`** (string): Customer's full name.
 - **`buyer_phone`** (string): Customer's phone number.
 - **`amount`** (integer): The amount to be paid (in smallest currency unit, e.g., cents).
-- **`account_id`** (string): Your unique account ID for authentication.
-- **`api_key`** (string): Your API key for authentication.
-- **`secret_key`** (string): Your secret key for authentication.
+
 
 #### cURL Configuration
 
@@ -88,9 +83,6 @@ To initiate a payment transaction, send a **POST** request to the API with a JSO
 | `buyer_phone`    | string  | Phone number of the buyer                          | `"255712345678"`     |
 | `buyer_email`    | string  | Email address of the buyer                         | `"johndoe@example.com"`|
 | `amount`         | float   | Amount to be paid by the buyer in the transaction  | `1500.00`              |
-| `account_id`     | string  | Unique account identifier for the transaction      | `"acc_12345xyz"`      |
-| `api_key`        | string  | Your API key for authentication.                   | `"api_key"` |
-| `secret_key`     | string  | Your secret key for authentication.                | `"secret_key"`  |
 
 
 
