@@ -1,299 +1,250 @@
-# ZenoPay Order Creation and Status Check Scripts
+Here's a polished and structured `README.md` for your **ZenoPay PHP Integration** GitHub project:
 
-This repository contains PHP scripts for interacting with the ZenoPay API. The scripts demonstrate how to create an order and check the status of an order.
+````markdown
+# ZenoPay PHP Integration
 
-## Table of Contents
-
-- [Order Creation Script](#order-creation-script)
-  - [Overview](#overview)
-  - [Script Components](#script-components)
-    - [API Endpoint](#api-endpoint)
-    - [Order Data](#order-data)
-    - [cURL Configuration](#curl-configuration)
-    - [Error Logging Function](#error-logging-function)
-  - [Error Handling](#error-handling)
-  - [Example Usage](#example-usage)
-  - [Notes](#notes)
-- [Order Status Check Script](#order-status-check-script)
-  - [Overview](#overview-1)
-  - [Script Components](#script-components-1)
-    - [API Endpoint](#api-endpoint-1)
-    - [Post Data](#post-data)
-    - [cURL Configuration](#curl-configuration-1)
-  - [Error Handling](#error-handling-1)
-  - [Example Usage](#example-usage-1)
-  - [Notes](#notes-1)
-
-## Order Creation Script
-
-### Overview
-
-This script sends a POST request to the ZenoPay API to create an order. It includes a basic error logging function to capture any issues during the request.
-
-### Script Components
-
-#### API Endpoint
-
-- **URL**: `https://api.zeno.africa`
-
-  This is the endpoint for creating an order.
-
-#### Order Data
-
-The following data is sent in the POST request:
-
-```php
-$url = "https://api.zeno.africa";
-
-// Data to send for creating the order 
-$orderData = [
-    'buyer_email' => 'CUSTOMER_EMAIL',
-    'buyer_name' => 'CUSTOMER_NAME',
-    'buyer_phone' => 'CUSTOMER_PHONE_NUMBER',
-    'amount' => 10000, // AMOUNT_TO_BE_PAID
-    'webhook_url' => 'https://example.com/webhook',
-    'metadata' => json_encode([
-        "product_id" => "12345",
-        "color" => "blue",
-        "size" => "L",
-        "custom_notes" => "Please gift-wrap this item."
-    ])
-];
-
-```
-
-- **`create_order`** (integer): Set to `1` to initiate order creation.
-- **`buyer_email`** (string): Customer's email address.
-- **`buyer_name`** (string): Customer's full name.
-- **`buyer_phone`** (string): Customer's phone number.
-- **`amount`** (integer): The amount to be paid (in smallest currency unit, e.g., cents).
-
-
-#### cURL Configuration
-
-
-
-### Request Format
-
-To initiate a payment transaction, send a **POST** request to the API with a JSON payload that includes the following parameters:
-
-| Parameter        | Type    | Description                                        | Example               |
-|------------------|---------|----------------------------------------------------|-----------------------|
-| `buyer_name`     | string  | Full name of the buyer                             | `"John Doe"`          |
-| `buyer_phone`    | string  | Phone number of the buyer                          | `"255712345678"`     |
-| `buyer_email`    | string  | Email address of the buyer                         | `"johndoe@example.com"`|
-| `amount`         | float   | Amount to be paid by the buyer in the transaction  | `1500.00`              |
-
-
-
-The script uses cURL to make the POST request:
-
-```php
-$options = [
-    'http' => [
-        'method'  => 'POST',
-        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
-        'content' => $queryString,
-    ],
-];
-```
-
-
-
-#### Error Logging Function
-
-Logs errors to a file:
-
-```php
-function logError($message) 
-{
-    file_put_contents('error_log.txt', $message . "\n", FILE_APPEND);
-}
-```
-
-### Error Handling
-
-To enhance error handling:
-
-1. **Check cURL Errors**:
-   ```php
-   if ($response === false) {
-       logError('cURL Error: ' . curl_error($ch));
-   }
-   ```
-
-2. **Check HTTP Status Code**:
-   ```php
-   $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-   if ($httpCode != 200) {
-       logError('HTTP Error: ' . $httpCode);
-   }
-   ```
-
-### Example Usage
-
-1. **Update Order Data**: Replace placeholder values with actual information.
-2. **Save the Script**: Save the file as `create_order.php` or another preferred filename.
-3. **Run the Script**: Execute it via command line or web server.
-
-### Notes
-
-- Ensure that `error_log.txt` is writable by the script.
-- Handle sensitive information such as API keys and secret keys securely.
-
-## Order Status Check Script
-
-### Overview
-
-This script checks the status of an order by sending a POST request to the ZenoPay API endpoint for order status.
-
-### Script Components
-
-#### API Endpoint
-
-- **URL**: `https://api.zeno.africa/order-status`
-
-  This is the endpoint for checking the status of an order.
-
-#### Post Data
-
-The following data is sent in the POST request:
-
-```php
-$endpointUrl = "https://api.zeno.africa/order-status";
-
-// Order ID that you want to check the status for
-$order_id = "66d5e374ccaab";
-
-// Data to be sent in the POST request
-$postData = [
-    'check_status' => 1,
-    'order_id' => $order_id,
-    'api_key' => 'YOUR_API_KEY',
-    'secret_key' => 'YOUR_SECRET_KEY'
-];
-```
-
-- **`check_status`** (integer): Set to `1` to request the status.
-- **`order_id`** (string): The ID of the order whose status you want to check.
-- **`api_key`** (string): Your API key for authentication.
-- **`secret_key`** (string): Your secret key for authentication.
-
-#### cURL Configuration
-
-The script uses cURL to perform the POST request:
-
-```php
-$options = [
-    'http' => [
-        'method'  => 'POST',
-        'header'  => "Content-Type: application/x-www-form-urlencoded\r\n",
-        'content' => $queryString,
-    ],
-];
-
-if (curl_errno($ch)) {
-    echo json_encode([
-        "status" => "error",
-        "message" => 'cURL error: ' . curl_error($ch)
-    ]);
-} else {
-    $responseData = json_decode($response, true);
-    if ($responseData['status'] === 'success') {
-        echo json_encode([
-            "status" => "success",
-            "order_id" => $responseData['order_id'],
-            "message" => $responseData['message'],
-            "payment_status" => $responseData['payment_status']
-        ]);
-    } else {
-        echo json_encode([
-            "status" => "error",
-            "message" => $responseData['message']
-        ]);
-    }
-}
-curl_close($ch);
-```
-
-
-
-### Error Handling
-
-1. **Check cURL Errors**:
-   ```php
-   if (curl_errno($ch)) {
-       echo json_encode([
-           "status" => "error",
-           "message" => 'cURL error: ' . curl_error($ch)
-       ]);
-   }
-   ```
-
-2. **Handle Response**:
-   Decode and format the JSON response based on the status:
-
-   ```php
-   if ($responseData['status'] === 'success') {
-       echo json_encode([
-           "status" => "success",
-           "order_id" => $responseData['order_id'],
-           "message" => $responseData['message'],
-           "payment_status" => $responseData['payment_status']
-       ]);
-   } else {
-       echo json_encode([
-           "status" => "error",
-           "message" => $responseData['message']
-       ]);
-   }
-   ```
-
-
-   ## Webhook Handling
-
-After a payment is processed, ZenoPay may send a **webhook** to notify you about the status of the transaction. You can use the following PHP code to handle the webhook and log the incoming data for further processing or debugging.
-
-### Webhook PHP Example
-
-```php
-<?php
-
-// Webhook handling
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Get the raw POST data from the incoming webhook
-    $data = file_get_contents('php://input');
-    
-    // Log the raw data with a timestamp
-    file_put_contents('weblogs.txt', "[" . date('Y-m-d H:i:s') . "] WebHook Data: ".$data."\n", FILE_APPEND);
-}
-
-?>
-
-
-
-WebHook Data: {"order_id":"6757c69cddfa6","payment_status":"COMPLETED","reference":"0882061614"}
-```
-
-### How the Webhook Works:
-1. **Receiving Webhook Data**: This script listens for incoming **POST** requests (which ZenoPay sends for webhooks
-
-) and reads the raw data from the request body using `file_get_contents('php://input')`.
-   
-2. **Logging Webhook Data**: The webhook data is logged to a file (`weblogs.txt`) along with a timestamp for reference. This log will help you debug and track transaction statuses or other data sent via the webhook.
-
-
-### Example Usage
-
-1. **Update Post Data**: Replace placeholder values with actual data.
-2. **Save the Script**: Save the file as `check_order_status.php` or another preferred filename.
-3. **Run the Script**: Execute it via command line or web server.
-
-### Notes
-
-- Ensure that `error_log.txt` is writable if you are using error logging.
-- Secure sensitive information such as API keys and secret keys.
+> A simple PHP client for ZenoPay Mobile Money Tanzania API  
+> Create payment orders, check status, and handle webhooks with ease.
 
 ---
 
-Feel free to modify or expand this README as needed for your specific requirements.
+## Table of Contents
+
+- [Features](#features)  
+- [Prerequisites](#prerequisites)  
+- [Installation](#installation)  
+- [Configuration](#configuration)  
+- [Usage](#usage)  
+  - [1. Create Order](#1-create-order)  
+  - [2. Check Order Status](#2-check-order-status)  
+  - [3. Handle Webhook Notifications](#3-handle-webhook-notifications)  
+- [Error Logging](#error-logging)  
+- [Support](#support)  
+
+---
+
+## Features
+
+✅ Create Mobile Money payment orders in Tanzania  
+✅ Check transaction/order status  
+✅ Handle webhook callbacks for status updates  
+✅ Log errors and webhook payloads  
+
+---
+
+## Prerequisites
+
+- PHP 7.0+  
+- cURL extension enabled  
+- Write permissions in project directory (for log files)
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/your-username/zenopay-php-client.git
+cd zenopay-php-client
+````
+
+---
+
+## Configuration
+
+Create a file named `config.php` in the root directory:
+
+```php
+<?php
+// config.php
+
+// Your ZenoPay API key
+define('ZP_API_KEY', 'YOUR_API_KEY_HERE');
+
+// Base URL for ZenoPay endpoints
+define('ZP_BASE_URL', 'https://zenoapi.com/api/payments');
+```
+
+---
+
+## Usage
+
+### 1. Create Order
+
+Save as `create_order.php`:
+
+```php
+<?php
+require 'config.php';
+
+$orderData = [
+    'order_id'    => uniqid('', true),
+    'buyer_email' => 'customer@example.com',
+    'buyer_name'  => 'John Doe',
+    'buyer_phone' => '0744963858', // Tanzanian format
+    'amount'      => 1000,         // Amount in TZS
+    'webhook_url' => 'https://your-domain.com/webhook', // Optional
+];
+
+$ch = curl_init(ZP_BASE_URL . '/mobile_money_tanzania');
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_POST           => true,
+    CURLOPT_HTTPHEADER     => [
+        'Content-Type: application/json',
+        'x-api-key: ' . ZP_API_KEY,
+    ],
+    CURLOPT_POSTFIELDS     => json_encode($orderData),
+]);
+
+$response = curl_exec($ch);
+if ($response === false) {
+    file_put_contents('error_log.txt', date('[Y-m-d H:i:s] ') . 'cURL Error: ' . curl_error($ch) . PHP_EOL, FILE_APPEND);
+    exit('Request failed. Check error_log.txt');
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+
+if ($httpCode !== 200) {
+    file_put_contents('error_log.txt', date('[Y-m-d H:i:s] ') . "HTTP Error: {$httpCode} - {$response}" . PHP_EOL, FILE_APPEND);
+    exit("HTTP {$httpCode}: {$response}");
+}
+
+$data = json_decode($response, true);
+if ($data['status'] === 'success') {
+    echo "✅ Order created! Order ID: {$data['order_id']}\n";
+} else {
+    echo "❌ Error: {$data['message']}\n";
+}
+```
+
+**Sample Success Response:**
+
+```json
+{
+  "status": "success",
+  "resultcode": "000",
+  "message": "Request in progress. You will receive a callback shortly",
+  "order_id": "3rer407fe-3ee8-4525-456f-ccb95de38250"
+}
+```
+
+---
+
+### 2. Check Order Status
+
+Save as `check_status.php`:
+
+```php
+<?php
+require 'config.php';
+
+$orderId = '3rer407fe-3ee8-4525-456f-ccb95de38250';
+
+$url = ZP_BASE_URL . '/order-status?order_id=' . urlencode($orderId);
+
+$ch = curl_init($url);
+curl_setopt_array($ch, [
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER     => [
+        'x-api-key: ' . ZP_API_KEY,
+    ],
+]);
+
+$response = curl_exec($ch);
+if ($response === false) {
+    exit('cURL Error: ' . curl_error($ch));
+}
+
+$httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+curl_close($ch);
+if ($httpCode !== 200) {
+    exit("HTTP {$httpCode}: {$response}");
+}
+
+$data = json_decode($response, true);
+if (!empty($data['data']) && $data['result'] === 'SUCCESS') {
+    foreach ($data['data'] as $order) {
+        echo "🔎 Order ID: {$order['order_id']}\n";
+        echo "   Status: {$order['payment_status']}\n";
+        echo "   Amount: {$order['amount']} TZS\n";
+        echo "   Reference: {$order['reference']}\n";
+    }
+} else {
+    echo "❌ Error: {$data['message']}\n";
+}
+```
+
+---
+
+### 3. Handle Webhook Notifications
+
+Save as `webhook.php`:
+
+```php
+<?php
+require 'config.php';
+
+if ($_SERVER['HTTP_X_API_KEY'] !== ZP_API_KEY) {
+    http_response_code(403);
+    exit('Invalid API key');
+}
+
+$payload = file_get_contents('php://input');
+
+file_put_contents(
+    'weblogs.txt',
+    date('[Y-m-d H:i:s] ') . $payload . PHP_EOL,
+    FILE_APPEND
+);
+
+$data = json_decode($payload, true);
+
+// Example payload:
+// {
+//   "order_id":"677e43274d7cb",
+//   "payment_status":"COMPLETED",
+//   "reference":"1003020496",
+//   "metadata":{
+//     "product_id":"12345",
+//     "color":"blue",
+//     "size":"L",
+//     "custom_notes":"Please gift-wrap this item."
+//   }
+// }
+
+// TODO: update your DB, send email, etc.
+
+http_response_code(200);
+echo 'OK';
+```
+
+---
+
+## Error Logging
+
+* `error_log.txt`: Stores cURL and HTTP errors
+* `weblogs.txt`: Stores raw webhook payloads
+
+Ensure these files are writable by the web server.
+
+---
+
+## Support
+
+Need help? Contact us:
+
+📧 **Email:** [support@zenoapi.com](mailto:support@zenoapi.com)
+🌐 **Website:** [https://zenoapi.com](https://zenoapi.com)
+🐛 **GitHub Issues:** [Open an issue](https://github.com/your-username/zenopay-php-client/issues)
+
+---
+
+> Built by **ZenoPay** · Simplifying Digital Payments in Tanzania 🇹🇿
+
+```
+
+---
+
+Let me know if you want the README translated to Swahili, or tailored for Composer/Packagist distribution.
+```
