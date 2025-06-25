@@ -246,5 +246,4 @@ Need help? Contact us:
 
 ---
 
-Let me know if you want the README translated to Swahili, or tailored for Composer/Packagist distribution.
 ```
